@@ -1,0 +1,56 @@
+server:
+    port: 8000
+    address: 127.0.0.1
+    debug: false
+database:
+    host: 127.0.0.1
+    port: 5432
+    username: kitis
+    password: qweryuiop123
+    database: kitisapi
+    timeout: 5s
+watcher:
+    wait: 1m
+    journalwait: 1h
+logger:
+    level: debug
+    target: stdout
+    filename: ""
+    maxfilesizemb: 1
+    maxfilebackups: 3
+    maxfileagedays: 28
+    filecompress: true
+parser:
+    timeout: 5s
+    baseuri: http://94.72.18.202:8083
+    urisuffix: .htm
+    uriprefixes:
+        bells: /bells
+        group: /cg
+        index: /index
+        lecturer: /cp
+        room: /ca
+    bells:
+        monday:
+            -1: 15:20-15:50
+            0: 00:00-00:00
+            1: 08:15-09:00
+            2: 09:10-10:30
+            3: 10:40-12:00
+            4: 12:20-13:40
+            5: 13:50-15:10
+            6: 16:00-17:20
+            7: 17:30-18:50
+            8: 19:00-20:20
+            9: 20:30-21:50
+        general:
+            0: 00:00-00:00
+            1: 08:30-10:00
+            2: 10:10-11:40
+            3: 12:10-13:40
+            4: 13:50-15:20
+            5: 15:30-17:00
+            6: 17:10-18:40
+            7: 18:50-20:20
+            8: 20:30-22:00
+            9: 22:10-23:40

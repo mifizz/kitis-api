@@ -1,0 +1,5 @@
+configs/*
+!configs/example.yaml
+
+logs
+docs
