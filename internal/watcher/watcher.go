@@ -10,10 +10,11 @@ import (
 )
 
 type Watcher struct {
-	config    *config.WatcherConfig
-	parser    *parser.Parser
-	mutex     sync.Mutex
-	Broadcast chan []byte
+	config           *config.WatcherConfig
+	parser           *parser.Parser
+	mutex            sync.Mutex
+	Broadcast        chan []byte
+	updateCandidates map[string]map[string]int // not implemented yet
 }
 
 func NewWatcher(config *config.WatcherConfig, parser *parser.Parser) *Watcher {

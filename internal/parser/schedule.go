@@ -64,8 +64,12 @@ func (p *Parser) parseSchedule(doc *goquery.Document) (domain.Schedule, error) {
 				// Замена первых разговоров о важном на вторые, если есть 5 и 6 пары
 				if day.Weekday == "Понедельник" && len(day.Lessons) > 0 {
 					lesson2_idx, lesson6_idx := -1, -1
+					rov_exists := false
 					// Проходимся по
 					for i, lesson := range day.Lessons {
+						if strings.Contains(strings.ToLower(lesson.Name), "разговоры о важном") {
+							rov_exists = true
+						}
 						switch lesson.Number {
 						case 2:
 							lesson2_idx = i
@@ -74,18 +78,22 @@ func (p *Parser) parseSchedule(doc *goquery.Document) (domain.Schedule, error) {
 						}
 					}
 					// Пересоздаём пару РоВ на основе указанной в расписании
-					lesson_rov := lesson_rov_second
-					lesson_rov.Name = day.Lessons[0].Name
-					lesson_rov.Group = day.Lessons[0].Group
-					lesson_rov.Lecturer = day.Lessons[0].Lecturer
-					lesson_rov.Room = day.Lessons[0].Room
-					if lesson2_idx == -1 && lesson6_idx > -1 {
-						// Вставляем второй РоВ
-						day.Lessons = append(day.Lessons[:lesson6_idx], append([]domain.ScheduleLesson{lesson_rov}, day.Lessons[lesson6_idx:]...)...)
-					}
-					if lesson2_idx == -1 {
-						// Убираем первый РоВ
-						day.Lessons = day.Lessons[1:]
+					// update 13.11.2026: Почему-то у ИМС25-1 нет первого РоВа в понедельник (с учётом, что пары с 4 по 6), а у других групп - есть
+					// следовательно, пропускаем всю эту канитель, если РоВа нет вообще
+					if rov_exists {
+						lesson_rov := lesson_rov_second
+						lesson_rov.Name = day.Lessons[0].Name
+						lesson_rov.Group = day.Lessons[0].Group
+						lesson_rov.Lecturer = day.Lessons[0].Lecturer
+						lesson_rov.Room = day.Lessons[0].Room
+						if lesson2_idx == -1 && lesson6_idx > -1 {
+							// Вставляем второй РоВ
+							day.Lessons = append(day.Lessons[:lesson6_idx], append([]domain.ScheduleLesson{lesson_rov}, day.Lessons[lesson6_idx:]...)...)
+						}
+						if lesson2_idx == -1 {
+							// Убираем первый РоВ
+							day.Lessons = day.Lessons[1:]
+						}
 					}
 				}
 				// Добавляем заполненный день в список
